@@ -1,0 +1,134 @@
+@ClientApi_HostAddress = http://localhost:5279
+@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJleHAiOjE3NzM0MjM3MDQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTI3OSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTI3OSJ9.vQGK8cV8RVDDFvhDZh2UJ4psVbbpAInfjv2TagyBu9M
+
+POST  {{ClientApi_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+    "login": "admin",
+    "password": "admin123"
+}
+
+###
+
+POST {{ClientApi_HostAddress}}/api/auth/logout
+Authorization: Bearer {{AccessToken}}
+
+###
+
+POST {{ClientApi_HostAddress}}/api/auth/refresh
+Content-Type: application/json
+
+{
+    "refresh_token": "IC8ikb3Flkmh614HnwIacBamRgQzqF+Eln5XKp82KZo="
+}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/user
+Authorization: Bearer {{AccessToken}}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/user/1
+Authorization: Bearer {{AccessToken}}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/user/by-login?login=admin
+Authorization: Bearer {{AccessToken}}
+
+###
+
+POST {{ClientApi_HostAddress}}/api/user
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "login": "new_user_login",
+    "password": "new_user_password"
+}
+
+###
+
+PUT {{ClientApi_HostAddress}}/api/user/1
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "login": "post_new_admin",
+    "password": "new_admin123"
+}
+
+###
+
+PATCH  {{ClientApi_HostAddress}}/api/user/1
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "login": "patch_new_admin"
+}
+
+###
+
+DELETE {{ClientApi_HostAddress}}/api/user/2
+Authorization: Bearer {{AccessToken}}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/client
+Authorization: Bearer {{AccessToken}}
+
+###
+
+POST {{ClientApi_HostAddress}}/api/client
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "full_name": "Morev Artyom Vladimirovich",
+    "phone": "9801238712",
+    "email": "example@example.com",
+    "discount": 0,
+    "verified": false
+}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/client/1
+Authorization: Bearer {{AccessToken}}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/client/by-email?email=example@example.com
+Authorization: Bearer {{AccessToken}}
+
+###
+
+PUT {{ClientApi_HostAddress}}/api/client/1
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "full_name": "Kolobaev Maksim Evgenievich",
+    "email": "kolobaevme@gmail.com",
+    "discount": 12.5,
+    "verified": true
+}
+
+
+###
+
+PATCH  {{ClientApi_HostAddress}}/api/client/1
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "phone": "9966818393"
+}
+
+###
+
+DELETE {{ClientApi_HostAddress}}/api/client/1
+Authorization: Bearer {{AccessToken}}
