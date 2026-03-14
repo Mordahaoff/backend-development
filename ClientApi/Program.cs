@@ -7,10 +7,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using System.Text.Json;
 using System.Reflection;
+using ClientApi.Extensions;
+using ClientApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,27 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
+    })
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var problemDetails = new ValidationProblemDetails(context.ModelState)
+            {
+                Title = "Validation Error",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = "One or more validation errors occurred.",
+                Instance = context.HttpContext.Request.Path
+            };
+
+            problemDetails.Extensions["traceId"] = context.HttpContext.TraceIdentifier;
+
+            // Возвращаем результат с кодом 400
+            return new BadRequestObjectResult(problemDetails)
+            {
+                ContentTypes = { "application/problem+json" }
+            };
+        };
     });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -37,6 +59,8 @@ builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 builder.Services.AddScoped<IPasswordHasher<UserRequestDto>, PasswordHasher<UserRequestDto>>();
+
+builder.Services.AddTransient<ErrorHandlingMiddleware>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -101,40 +125,20 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 else
 {
-    app.UseExceptionHandler("/error");
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 
+app.UseErrorHandling();
+
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Обработчик ошибок
-// app.Map("/error", (HttpContext context) =>
-// {
-//     var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-//     var exception = exceptionHandlerPathFeature?.Error;
-//     var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-//     logger.LogError(exception, "An unhandled exception occurred.");
-
-//     var problemDetails = new ProblemDetails
-//     {
-//         Title = "Internal Server Error",
-//         Status = StatusCodes.Status500InternalServerError,
-//         Detail = "An unexpected error occurred. Please try again later.",
-//         Instance = context.Request.Path
-//     };
-//     problemDetails.Extensions["traceId"] = context.TraceIdentifier;
-
-//     return Results.Problem(problemDetails);
-// });
 
 app.MapControllers();
 

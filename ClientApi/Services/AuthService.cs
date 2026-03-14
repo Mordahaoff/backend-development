@@ -50,13 +50,15 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
 
     public async Task LogoutAsync(string? refreshToken)
     {
-        if (string.IsNullOrEmpty(refreshToken)) return;
+        if (string.IsNullOrEmpty(refreshToken)) throw new BadHttpRequestException("Refresh Token is null or empty");
 
         await _refreshTokenRepository.RevokeRefreshTokenAsync(refreshToken);
     }
 
     public async Task<AuthResponseDto> RefreshTokenAsync(string refreshToken)
     {
+        if (string.IsNullOrEmpty(refreshToken)) throw new BadHttpRequestException("Refresh Token is null or empty");
+
         var storedToken = await _refreshTokenRepository.GetValidRefreshTokenAsync(refreshToken);
         if (storedToken == null)
             return new AuthResponseDto { Success = false, Error = "Invalid refresh token" };

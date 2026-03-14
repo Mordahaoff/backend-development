@@ -1,5 +1,6 @@
 @ClientApi_HostAddress = http://localhost:5279
-@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJleHAiOjE3NzM0NzEzNjIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTI3OSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTI3OSJ9.47DVEPAsZfM0-FEka7mvKUxJFLq4v1pqq3u6sDSYvNo
+@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJleHAiOjE3NzM0OTE2MDAsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTI3OSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTI3OSJ9.DbpYLSZBEdpMEjFbtMtZgdb1LbbwZiJTCM5sfecEbyc
+@RefreshToken = NEBwV+9Muwzyc746Ijf+HEepRNOAxDg5sATPCCGt3VY=
 
 POST  {{ClientApi_HostAddress}}/api/auth/login
 Content-Type: application/json
@@ -12,7 +13,7 @@ Content-Type: application/json
 ###
 
 POST {{ClientApi_HostAddress}}/api/auth/logout
-Authorization: Bearer {{AccessToken}}
+X-Refresh-Token: {{RefreshToken}}
 
 ###
 
@@ -20,7 +21,7 @@ POST {{ClientApi_HostAddress}}/api/auth/refresh
 Content-Type: application/json
 
 {
-    "refresh_token": "IC8ikb3Flkmh614HnwIacBamRgQzqF+Eln5XKp82KZo="
+    "refresh_token": "NEBwV+9Muwzyc746Ijf+HEepRNOAxDg5sATPCCGt3VY="
 }
 
 ###

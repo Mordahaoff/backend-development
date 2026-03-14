@@ -9,11 +9,14 @@ public class RefreshTokenRepository(ApplicationDbContext context) : IRefreshToke
 
     public async Task<RefreshToken?> GetValidRefreshTokenAsync(string refreshToken)
     {
-        return await _context.RefreshTokens
+        Console.WriteLine($"Searching for token: {refreshToken}");
+        var result = await _context.RefreshTokens
             .Include(rt => rt.User)
             .FirstOrDefaultAsync(rt => rt.Token == refreshToken
                 && rt.ExpiresAt > DateTime.UtcNow
                 && !rt.IsRevoked);
+        Console.WriteLine(result == null ? "Token not found or invalid" : $"Token found, expires at {result.ExpiresAt}");
+        return result;
     }
 
     public async Task SaveRefreshTokenAsync(RefreshToken refreshToken)
@@ -33,6 +36,7 @@ public class RefreshTokenRepository(ApplicationDbContext context) : IRefreshToke
             if (replacedByToken != null)
                 refreshToken.ReplacedByToken = replacedByToken;
 
+            _context.RefreshTokens.Update(refreshToken);
             await _context.SaveChangesAsync();
         }
     }

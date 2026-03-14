@@ -53,15 +53,8 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
-        try
-        {
-            var user = await _userService.GetUserByIdAsync(id);
-            return Ok(user);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
+        var user = await _userService.GetUserByIdAsync(id);
+        return Ok(user);
     }
 
     /// <summary>Gets a user by login</summary>
@@ -85,19 +78,8 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByLogin([FromQuery] string login)
     {
-        try
-        {
-            var user = await _userService.GetUserByLoginAsync(login);
-            return Ok(user);
-        }
-        catch (BadHttpRequestException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
+        var user = await _userService.GetUserByLoginAsync(login);
+        return Ok(user);
     }
 
     /// <summary>Creates a new user</summary>
@@ -125,15 +107,8 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Add(UserRequestDto userDto)
     {
-        try
-        {
-            var user = await _userService.AddUserAsync(userDto);
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return UnprocessableEntity(new { error = ex.Message });
-        }
+        var user = await _userService.AddUserAsync(userDto);
+        return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
     }
 
     /// <summary>Updates a user by id</summary>
@@ -164,15 +139,8 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Update(int id, UserRequestDto userDto)
     {
-        try
-        {
-            await _userService.UpdateUserAsync(id, userDto);
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
+        await _userService.UpdateUserAsync(id, userDto);
+        return NoContent();
     }
 
     /// <summary>Partially updates a user by id</summary>
@@ -202,19 +170,8 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> PartialUpdate(int id, UserPartialUpdateRequestDto userDto)
     {
-        try
-        {
-            await _userService.PartialUpdateUserAsync(id, userDto);
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
-        catch (BadHttpRequestException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
+        await _userService.PartialUpdateUserAsync(id, userDto);
+        return NoContent();
     }
 
     /// <summary>Deletes a user by id</summary>
@@ -235,14 +192,7 @@ public class UserController(IUserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id)
     {
-        try
-        {
-            await _userService.DeleteUserAsync(id);
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
+        await _userService.DeleteUserAsync(id);
+        return NoContent();
     }
 }

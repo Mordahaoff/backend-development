@@ -26,7 +26,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// </remarks>
     /// <response code="200">Returns an access token and etc.</response>
     /// <response code="400">If request is not valid</response>
-    /// <response code="401">If data is invalid</response>
+    /// <response code="401">If unauthorized</response>
     [HttpPost("login")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -73,7 +73,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// </remarks>
     /// <response code="200">Returns an access token and etc.</response>
     /// <response code="400">RefreshToken is required</response>
-    /// /// <response code="401">If data is invalid</response>
+    /// <response code="401">If data is invalid</response>
     [HttpPost("refresh")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]

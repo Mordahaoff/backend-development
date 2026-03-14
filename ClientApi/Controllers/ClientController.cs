@@ -53,15 +53,8 @@ public class ClientController(IClientService clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
-        try
-        {
-            var client = await _clientService.GetClientByIdAsync(id);
-            return Ok(client);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
+        var client = await _clientService.GetClientByIdAsync(id);
+        return Ok(client);
     }
 
     /// <summary>Gets a client by email</summary>
@@ -84,19 +77,8 @@ public class ClientController(IClientService clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByEmail([FromQuery] string email)
     {
-        try
-        {
-            var client = await _clientService.GetClientByEmailAsync(email);
-            return Ok(client);
-        }
-        catch (BadHttpRequestException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
+        var client = await _clientService.GetClientByEmailAsync(email);
+        return Ok(client);
     }
 
     /// <summary>Creates a new client</summary>
@@ -124,15 +106,8 @@ public class ClientController(IClientService clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Add(ClientRequestDto clientDto)
     {
-        try
-        {
-            var client = await _clientService.AddClientAsync(clientDto);
-            return CreatedAtAction(nameof(GetById), new { id = client.Id }, client);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return UnprocessableEntity(new { error = ex.Message });
-        }
+        var client = await _clientService.AddClientAsync(clientDto);
+        return CreatedAtAction(nameof(GetById), new { id = client.Id }, client);
     }
 
     /// <summary>Updates a client by id</summary>
@@ -163,19 +138,8 @@ public class ClientController(IClientService clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Update(int id, ClientRequestDto clientDto)
     {
-        try
-        {
-            await _clientService.UpdateClientAsync(id, clientDto);
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return UnprocessableEntity(new { error = ex.Message });
-        }
+        await _clientService.UpdateClientAsync(id, clientDto);
+        return NoContent();
     }
 
     /// <summary>Partially updates a client by id</summary>
@@ -206,23 +170,8 @@ public class ClientController(IClientService clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> PartialUpdate(int id, ClientPartialUpdateRequestDto clientDto)
     {
-        try
-        {
-            await _clientService.PartialUpdateClientAsync(id, clientDto);
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return UnprocessableEntity(new { error = ex.Message });
-        }
-        catch (BadHttpRequestException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
+        await _clientService.PartialUpdateClientAsync(id, clientDto);
+        return NoContent();
     }
 
     /// <summary>Deletes a client by id</summary>
@@ -243,14 +192,7 @@ public class ClientController(IClientService clientService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id)
     {
-        try
-        {
-            await _clientService.DeleteClientAsync(id);
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
+        await _clientService.DeleteClientAsync(id);
+        return NoContent();
     }
 }
