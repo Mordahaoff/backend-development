@@ -19,7 +19,7 @@ public class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : 
 
             var (statusCode, title) = ex switch
             {
-                BadHttpRequestException => (StatusCodes.Status400BadRequest, "Bad Request"),
+                ArgumentException or BadHttpRequestException => (StatusCodes.Status400BadRequest, "Bad Request"),
                 UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, "Unauthorized"),
                 KeyNotFoundException => (StatusCodes.Status404NotFound, "Resource not found"),
                 InvalidOperationException => (StatusCodes.Status422UnprocessableEntity, "Business rule violation"),
@@ -30,7 +30,7 @@ public class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : 
             {
                 Title = title,
                 Status = statusCode,
-                Detail = ex.Message, // в production можно скрыть детали
+                Detail = ex.Message,
                 Instance = context.Request.Path
             };
             problem.Extensions["traceId"] = context.TraceIdentifier;
