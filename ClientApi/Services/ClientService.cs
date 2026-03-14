@@ -8,7 +8,7 @@ public class ClientService(IClientRepository clientRepository) : IClientService
 {
     private readonly IClientRepository _clientRepository = clientRepository;
 
-    public async Task<IEnumerable<ClientResponseDto>> GetAllClientsAsync()
+    public async Task<IEnumerable<ClientResponseDto>?> GetAllClientsAsync()
     {
         var clients = await _clientRepository.GetAllAsync();
 
@@ -60,7 +60,7 @@ public class ClientService(IClientRepository clientRepository) : IClientService
 
     public async Task<ClientResponseDto> AddClientAsync(ClientRequestDto clientDto)
     {
-        var existing = _clientRepository.GetByEmailAsync(clientDto.Email);
+        var existing = await _clientRepository.GetByEmailAsync(clientDto.Email);
         if (existing != null)
             throw new InvalidOperationException("Client with this email already exists");
 
@@ -91,7 +91,7 @@ public class ClientService(IClientRepository clientRepository) : IClientService
     {
         var client = await _clientRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("Client not found");
 
-        var existing = _clientRepository.GetByEmailAsync(clientDto.Email);
+        var existing = await _clientRepository.GetByEmailAsync(clientDto.Email);
         if (existing != null)
             throw new InvalidOperationException("Client with this email already exists");
 
@@ -118,17 +118,17 @@ public class ClientService(IClientRepository clientRepository) : IClientService
 
         if (clientDto.Email != null)
         {
-            var existing = _clientRepository.GetByEmailAsync(clientDto.Email);
+            var existing = await _clientRepository.GetByEmailAsync(clientDto.Email);
             if (existing != null)
                 throw new InvalidOperationException("Client with this email already exists");
             patchDoc.Replace(c => c.Email, clientDto.Email);
         }
 
-        if (clientDto.Discount != 0)
-            patchDoc.Replace(c => c.Discount, clientDto.Discount);
+        if (clientDto.Discount.HasValue)
+            patchDoc.Replace(c => c.Discount, clientDto.Discount.Value);
 
-        if (clientDto.Verified != false)
-            patchDoc.Replace(c => c.Verified, clientDto.Verified);
+        if (clientDto.Verified.HasValue)
+            patchDoc.Replace(c => c.Verified, clientDto.Verified.Value);
 
         if (patchDoc.Operations.Count == 0)
             throw new BadHttpRequestException("No fields to update.");

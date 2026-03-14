@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ClientApi.Models;
 
@@ -36,6 +37,7 @@ public class ClientPartialUpdateRequestDto
     [StringLength(200, ErrorMessage = "FullName must be up to 200 characters long")]
     public string? FullName { get; set; }
 
+    [JsonPropertyName("phone")]
     [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone must contain 10 characters")]
     public string? Phone { get; set; }
 
@@ -45,7 +47,7 @@ public class ClientPartialUpdateRequestDto
     [Range(0, 100, ErrorMessage = "Discount must be between 0 and 100"), DefaultValue(0.00)]
     public decimal? Discount { get; set; }
 
-    [AllowedValues([true, false], ErrorMessage = "Value must be on of nexts: true, false"), DefaultValue(false)]
+    [AllowedValues([true, false, null], ErrorMessage = "Value must be on of nexts: true, false, null")]
     public bool? Verified { get; set; }
 }
 

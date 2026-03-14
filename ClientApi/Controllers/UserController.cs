@@ -23,8 +23,10 @@ public class UserController(IUserService userService) : ControllerBase
     /// 
     /// </remarks>
     /// <response code="200">Returns the list of all users</response>
+    /// <response code="401">If unauthorized</response>
     [HttpGet]
     [ProducesResponseType<IEnumerable<UserResponseDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetAll()
     {
         var users = await _userService.GetAllUsersAsync();
@@ -42,10 +44,12 @@ public class UserController(IUserService userService) : ControllerBase
     /// </remarks>
     /// <response code="200">User is found</response>
     /// <response code="400">If id is not a number</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="404">If user is not found</response>
     [HttpGet("{id:int}")]
     [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
@@ -56,7 +60,7 @@ public class UserController(IUserService userService) : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex);
+            return NotFound(new { error = ex.Message });
         }
     }
 
@@ -71,10 +75,13 @@ public class UserController(IUserService userService) : ControllerBase
     /// </remarks>
     /// <response code="200">User is found</response>
     /// <response code="400">If login is null or empty</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="404">If user is not found</response>
+
     [HttpGet("by-login")]
     [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByLogin([FromQuery] string login)
     {
@@ -85,11 +92,11 @@ public class UserController(IUserService userService) : ControllerBase
         }
         catch (BadHttpRequestException ex)
         {
-            return BadRequest(ex);
+            return BadRequest(new { error = ex.Message });
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex);
+            return NotFound(new { error = ex.Message });
         }
     }
 
@@ -108,11 +115,13 @@ public class UserController(IUserService userService) : ControllerBase
     /// </remarks>
     /// <response code="201">Returns the newly created user</response>
     /// <response code="400">If body is not valid</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="422">If the user with this login already exists</response>
     [HttpPost]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType<UserResponseDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Add(UserRequestDto userDto)
     {
@@ -123,7 +132,7 @@ public class UserController(IUserService userService) : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            return UnprocessableEntity(ex);
+            return UnprocessableEntity(new { error = ex.Message });
         }
     }
 
@@ -143,12 +152,14 @@ public class UserController(IUserService userService) : ControllerBase
     /// <returns>NoContent</returns>
     /// <response code="204">The user has been successfully updated</response>
     /// <response code="400">If id is not a number or the body is not valid</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="404">If user with this id is not found</response>
     /// <response code="422">If the user with this new login already exists</response>
     [HttpPut("{id:int}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Update(int id, UserRequestDto userDto)
@@ -160,7 +171,7 @@ public class UserController(IUserService userService) : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex);
+            return NotFound(new { error = ex.Message });
         }
     }
 
@@ -179,12 +190,14 @@ public class UserController(IUserService userService) : ControllerBase
     /// <returns>NoContent</returns>
     /// <response code="204">The user has been successfully updated</response>
     /// <response code="400">If id is not a number, the body is not valid or nothing to update</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="404">If user with this id is not found</response>
     /// <response code="422">If the user with this new login already exists</response>
     [HttpPatch("{id:int}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> PartialUpdate(int id, UserPartialUpdateRequestDto userDto)
@@ -196,11 +209,11 @@ public class UserController(IUserService userService) : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex);
+            return NotFound(new { error = ex.Message });
         }
         catch (BadHttpRequestException ex)
         {
-            return BadRequest(ex);
+            return BadRequest(new { error = ex.Message });
         }
     }
 
@@ -214,9 +227,11 @@ public class UserController(IUserService userService) : ControllerBase
     /// </remarks>
     /// <returns>NoContent</returns>
     /// <response code="204">Client has been successfully deleted</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="404">If client with this id is not found</response>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id)
     {
@@ -227,7 +242,7 @@ public class UserController(IUserService userService) : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex);
+            return NotFound(new { error = ex.Message });
         }
     }
 }

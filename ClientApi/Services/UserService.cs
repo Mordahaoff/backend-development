@@ -11,7 +11,7 @@ public class UserService(IUserRepository userRepository, IPasswordHasher<UserReq
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IPasswordHasher<UserRequestDto> _passwordHasher = passwordHasher;
 
-    public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
+    public async Task<IEnumerable<UserResponseDto?>> GetAllUsersAsync()
     {
         var users = await _userRepository.GetAllAsync();
 

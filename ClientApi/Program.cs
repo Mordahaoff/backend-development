@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using System.Text.Json;
 using System.Reflection;
-// Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
 
 var builder = WebApplication.CreateBuilder(args);
 

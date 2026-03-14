@@ -23,8 +23,10 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// 
     /// </remarks>
     /// <response code="200">Returns the list of all clients</response>
+    /// <response code="401">If unauthorized</response>
     [HttpGet]
     [ProducesResponseType<IEnumerable<ClientResponseDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetAll()
     {
         var clients = await _clientService.GetAllClientsAsync();
@@ -42,10 +44,12 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// </remarks>
     /// <response code="200">Client is found</response>
     /// <response code="400">If id is not a number</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="404">If client is not found</response>
     [HttpGet("{id:int}")]
     [ProducesResponseType<ClientResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
@@ -56,7 +60,7 @@ public class ClientController(IClientService clientService) : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex);
+            return NotFound(new { error = ex.Message });
         }
     }
 
@@ -71,10 +75,12 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// </remarks>
     /// <response code="200">Client is found</response>
     /// <response code="400">If email is null or empty</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="404">If client is not found</response>
     [HttpGet("by-email")]
     [ProducesResponseType<ClientResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetByEmail([FromQuery] string email)
     {
@@ -85,11 +91,11 @@ public class ClientController(IClientService clientService) : ControllerBase
         }
         catch (BadHttpRequestException ex)
         {
-            return BadRequest(ex);
+            return BadRequest(new { error = ex.Message });
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex);
+            return NotFound(new { error = ex.Message });
         }
     }
 
@@ -108,11 +114,13 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// </remarks>
     /// <response code="201">Returns the newly created client</response>
     /// <response code="400">If body is not valid</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="422">If the client with this email already exists</response>
     [HttpPost]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType<ClientResponseDto>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Add(ClientRequestDto clientDto)
     {
@@ -123,7 +131,7 @@ public class ClientController(IClientService clientService) : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            return UnprocessableEntity(ex);
+            return UnprocessableEntity(new { error = ex.Message });
         }
     }
 
@@ -143,12 +151,14 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// <returns>NoContent</returns>
     /// <response code="204">The client has been successfully updated</response>
     /// <response code="400">If id is not a number or the body is not valid</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="404">If client with this id is not found</response>
     /// <response code="422">If the client with this new email already exists</response>
     [HttpPut("{id:int}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Update(int id, ClientRequestDto clientDto)
@@ -160,11 +170,11 @@ public class ClientController(IClientService clientService) : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex);
+            return NotFound(new { error = ex.Message });
         }
         catch (InvalidOperationException ex)
         {
-            return UnprocessableEntity(ex);
+            return UnprocessableEntity(new { error = ex.Message });
         }
     }
 
@@ -184,12 +194,14 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// <returns>NoContent</returns>
     /// <response code="204">The client has been successfully updated</response>
     /// <response code="400">If id is not a number, the body is not valid or nothing to update</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="404">If client with this id is not found</response>
     /// <response code="422">If the client with this new email already exists</response>
     [HttpPatch("{id:int}")]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> PartialUpdate(int id, ClientPartialUpdateRequestDto clientDto)
@@ -201,15 +213,15 @@ public class ClientController(IClientService clientService) : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex);
+            return NotFound(new { error = ex.Message });
         }
         catch (InvalidOperationException ex)
         {
-            return UnprocessableEntity(ex);
+            return UnprocessableEntity(new { error = ex.Message });
         }
         catch (BadHttpRequestException ex)
         {
-            return BadRequest(ex);
+            return BadRequest(new { error = ex.Message });
         }
     }
 
@@ -223,9 +235,11 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// </remarks>
     /// <returns>NoContent</returns>
     /// <response code="204">Client has been successfully deleted</response>
+    /// <response code="401">If unauthorized</response>
     /// <response code="404">If client with this id is not found</response>
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(int id)
     {
@@ -236,7 +250,7 @@ public class ClientController(IClientService clientService) : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
-            return NotFound(ex);
+            return NotFound(new { error = ex.Message });
         }
     }
 }

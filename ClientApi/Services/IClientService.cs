@@ -4,7 +4,7 @@ namespace ClientApi.Services;
 
 public interface IClientService
 {
-    Task<IEnumerable<ClientResponseDto>> GetAllClientsAsync();
+    Task<IEnumerable<ClientResponseDto>?> GetAllClientsAsync();
     Task<ClientResponseDto> GetClientByIdAsync(int id);
     Task<ClientResponseDto> GetClientByEmailAsync(string email);
     Task<ClientResponseDto> AddClientAsync(ClientRequestDto clientDto);

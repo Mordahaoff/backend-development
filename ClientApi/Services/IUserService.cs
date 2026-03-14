@@ -4,7 +4,7 @@ namespace ClientApi.Services;
 
 public interface IUserService
 {
-    Task<IEnumerable<UserResponseDto>> GetAllUsersAsync();
+    Task<IEnumerable<UserResponseDto?>> GetAllUsersAsync();
     Task<UserResponseDto> GetUserByIdAsync(int id);
     Task<UserResponseDto> GetUserByLoginAsync(string login);
     Task<UserResponseDto> AddUserAsync(UserRequestDto userDto);
