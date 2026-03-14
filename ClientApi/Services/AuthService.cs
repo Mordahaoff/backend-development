@@ -18,13 +18,11 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
 
     public async Task<AuthResponseDto> LoginAsync(string login, string password)
     {
-        var user = await _userRepository.GetByLoginAsync(login);
-        if (user == null)
-            return new AuthResponseDto { Success = false, Error = "Invalid login or password" };
+        var user = await _userRepository.GetByLoginAsync(login) ?? throw new KeyNotFoundException("User not found");
 
         var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.HashPassword, password);
         if (verificationResult == PasswordVerificationResult.Failed)
-            return new AuthResponseDto { Success = false, Error = "Invalid login or password" };
+            throw new UnauthorizedAccessException("Unauthorized");
 
         var accessToken = GenerateAccessToken(user);
         var refreshToken = GenerateRefreshToken();
@@ -59,13 +57,10 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
     {
         if (string.IsNullOrEmpty(refreshToken)) throw new BadHttpRequestException("Refresh Token is null or empty");
 
-        var storedToken = await _refreshTokenRepository.GetValidRefreshTokenAsync(refreshToken);
-        if (storedToken == null)
-            return new AuthResponseDto { Success = false, Error = "Invalid refresh token" };
-
-        var user = await _userRepository.GetByIdAsync(storedToken.UserId);
-        if (user == null)
-            return new AuthResponseDto { Success = false, Error = "User not found" };
+        var storedToken = await _refreshTokenRepository.GetValidRefreshTokenAsync(refreshToken)
+            ?? throw new BadHttpRequestException("Refresh Token is not found");
+        var user = await _userRepository.GetByIdAsync(storedToken.UserId)
+            ?? throw new KeyNotFoundException("User not found");
 
         var newAccessToken = GenerateAccessToken(user);
         var newRefreshToken = GenerateRefreshToken();
