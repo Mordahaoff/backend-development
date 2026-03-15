@@ -70,7 +70,6 @@ public class UserController(IUserService userService) : ControllerBase
     /// <response code="400">If login is null or empty</response>
     /// <response code="401">If unauthorized</response>
     /// <response code="404">If user is not found</response>
-
     [HttpGet("by-login")]
     [ProducesResponseType<UserResponseDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -47,6 +47,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// Sample request:
     /// 
     ///     POST /api/auth/logout
+    ///     -H "X-Refresh-Token: my-refresh-token"
     /// 
     /// </remarks>
     /// <response code="204">Log out is successful</response>
