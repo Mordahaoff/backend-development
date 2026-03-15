@@ -68,7 +68,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
         var newAccessToken = GenerateAccessToken(user);
         var newRefreshToken = GenerateRefreshToken();
 
-        await _refreshTokenRepository.RevokeRefreshTokenAsync(refreshToken);
+        await _refreshTokenRepository.RevokeRefreshTokenAsync(refreshToken, newRefreshToken);
 
         var newRefreshTokenEntity = new RefreshToken
         {
