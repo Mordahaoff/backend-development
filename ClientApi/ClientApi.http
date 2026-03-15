@@ -1,0 +1,135 @@
+@ClientApi_HostAddress = http://localhost:5279
+@AccessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjMiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW4iLCJleHAiOjE3NzM1NzU4NjgsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTI3OSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTI3OSJ9.t00Xvn0_XgVaBedA9JmSb3kViWUMq0DzN_EJnDHo9-4
+@RefreshToken = QoR4wCTxqkoxPUvyXxFY5gHJH4NHz9Ee/n8lZIpMLbE=
+
+POST  {{ClientApi_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+    "login": "admin",
+    "password": "admin123"
+}
+
+###
+
+POST {{ClientApi_HostAddress}}/api/auth/logout
+X-Refresh-Token: {{RefreshToken}}
+
+###
+
+POST {{ClientApi_HostAddress}}/api/auth/refresh
+Content-Type: application/json
+
+{
+    "refresh_token": "{{AccessToken}}"
+}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/user
+Authorization: Bearer {{AccessToken}}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/user/1
+Authorization: Bearer {{AccessToken}}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/user/by-login?login=admin
+Authorization: Bearer {{AccessToken}}
+
+###
+
+POST {{ClientApi_HostAddress}}/api/user
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "login": "a",
+    "password": "m"
+}
+
+###
+
+PUT {{ClientApi_HostAddress}}/api/user/5
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "login": "maksim_kolobaev",
+    "password": "kolobaev_password"
+}
+
+###
+
+PATCH  {{ClientApi_HostAddress}}/api/user/5
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "login": "kolobaev_is_cool"
+}
+
+###
+
+DELETE {{ClientApi_HostAddress}}/api/user/5
+Authorization: Bearer {{AccessToken}}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/client
+Authorization: Bearer {{AccessToken}}
+
+###
+
+POST {{ClientApi_HostAddress}}/api/client
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "full_name": "Kolobaev Maksim Evgenievich",
+    "phone": "9801238712",
+    "email": "kolobaevma@gmail.com",
+    "discount": 12.5,
+    "verified": true
+}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/client/10
+Authorization: Bearer {{AccessToken}}
+
+###
+
+GET {{ClientApi_HostAddress}}/api/client/by-email?email=kolobaevma@gmail.com
+Authorization: Bearer {{AccessToken}}
+
+###
+
+PUT {{ClientApi_HostAddress}}/api/client/3
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "full_name": "Kaspirovich Daniil Romanovich",
+    "email": "kaspirovichdr@mail.ru",
+    "discount": 0,
+    "verified": false
+}
+
+
+###
+
+PATCH  {{ClientApi_HostAddress}}/api/client/3
+Authorization: Bearer {{AccessToken}}
+Content-Type: application/json
+
+{
+    "phone": "9966818393"
+}
+
+###
+
+DELETE {{ClientApi_HostAddress}}/api/client/3
+Authorization: Bearer {{AccessToken}}
