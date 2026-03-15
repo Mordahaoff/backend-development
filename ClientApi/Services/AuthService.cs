@@ -22,7 +22,7 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
 
         var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.HashPassword, password);
         if (verificationResult == PasswordVerificationResult.Failed)
-            throw new UnauthorizedAccessException("Unauthorized");
+            return new AuthResponseDto { Success = false, Error = "Password is not verified" };
 
         var accessToken = GenerateAccessToken(user);
         var refreshToken = GenerateRefreshToken();
@@ -57,10 +57,13 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
     {
         if (string.IsNullOrEmpty(refreshToken)) throw new BadHttpRequestException("Refresh Token is null or empty");
 
-        var storedToken = await _refreshTokenRepository.GetValidRefreshTokenAsync(refreshToken)
-            ?? throw new BadHttpRequestException("Refresh Token is not found");
-        var user = await _userRepository.GetByIdAsync(storedToken.UserId)
-            ?? throw new KeyNotFoundException("User not found");
+        var storedToken = await _refreshTokenRepository.GetValidRefreshTokenAsync(refreshToken);
+        if (storedToken == null)
+            return new AuthResponseDto { Success = false, Error = "Refresh Token is not found" };
+
+        var user = await _userRepository.GetByIdAsync(storedToken.UserId);
+        if (user == null)
+            return new AuthResponseDto { Success = false, Error = "User not found" };
 
         var newAccessToken = GenerateAccessToken(user);
         var newRefreshToken = GenerateRefreshToken();
