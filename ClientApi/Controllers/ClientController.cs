@@ -20,6 +20,7 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// Sample request:
     /// 
     ///     GET /api/client
+    ///     Authorization: Bearer my-access-token
     /// 
     /// </remarks>
     /// <response code="200">Returns the list of all clients</response>
@@ -40,6 +41,7 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// Sample request:
     /// 
     ///     GET /api/client/1
+    ///     Authorization: Bearer my-access-token
     /// 
     /// </remarks>
     /// <response code="200">Client is found</response>
@@ -63,7 +65,8 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// <remarks>
     /// Sample request:
     /// 
-    ///     GET /api/client/example@example.com
+    ///     GET /api/client/by-email?email=example@example.com
+    ///     Authorization: Bearer my-access-token
     /// 
     /// </remarks>
     /// <response code="200">Client is found</response>
@@ -88,6 +91,7 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// Sample request:
     /// 
     ///     POST /api/client
+    ///     Authorization: Bearer my-access-token
     ///     {
     ///         "full_name": "Client's FullName",
     ///         "email": "example@example.com"
@@ -117,6 +121,7 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// Sample request:
     /// 
     ///     PUT /api/client/1
+    ///     Authorization: Bearer my-access-token
     ///     {
     ///         "full_name": "Client's FullName",
     ///         "email": "example@example.com"
@@ -149,6 +154,7 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// Sample request:
     /// 
     ///     PATCH /api/client/1
+    ///     Authorization: Bearer my-access-token
     ///     {
     ///         "full_name": "New client's FullName",
     ///         "email": "new_example@example.com"
@@ -180,6 +186,7 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// Sample request:
     /// 
     ///     DELETE /api/client/1
+    ///     Authorization: Bearer my-access-token
     /// 
     /// </remarks>
     /// <returns>NoContent</returns>

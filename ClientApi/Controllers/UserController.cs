@@ -20,6 +20,7 @@ public class UserController(IUserService userService) : ControllerBase
     /// Sample request:
     /// 
     ///     GET /api/user
+    ///     Authorization: Bearer my-access-token
     /// 
     /// </remarks>
     /// <response code="200">Returns the list of all users</response>
@@ -40,6 +41,7 @@ public class UserController(IUserService userService) : ControllerBase
     /// Sample request:
     /// 
     ///     GET /api/user/1
+    ///     Authorization: Bearer my-access-token
     /// 
     /// </remarks>
     /// <response code="200">User is found</response>
@@ -63,7 +65,8 @@ public class UserController(IUserService userService) : ControllerBase
     /// <remarks>
     /// Sample request:
     /// 
-    ///     GET /api/user/1
+    ///     GET /api/user/by-login?login=admin
+    ///     Authorization: Bearer my-access-token
     /// 
     /// </remarks>
     /// <response code="200">User is found</response>
@@ -88,6 +91,7 @@ public class UserController(IUserService userService) : ControllerBase
     /// Sample request:
     /// 
     ///     POST /api/user
+    ///     Authorization: Bearer my-access-token
     ///     {
     ///         "login": "login",
     ///         "password": "password"
@@ -117,6 +121,7 @@ public class UserController(IUserService userService) : ControllerBase
     /// Sample request:
     /// 
     ///     PUT /api/user/1
+    ///     Authorization: Bearer my-access-token
     ///     {
     ///         "login": "new_login",
     ///         "password": "new_password"
@@ -149,6 +154,7 @@ public class UserController(IUserService userService) : ControllerBase
     /// Sample request:
     /// 
     ///     PATCH /api/user/1
+    ///     Authorization: Bearer my-access-token
     ///     {
     ///         "login": "new_login"
     ///     }
@@ -179,6 +185,7 @@ public class UserController(IUserService userService) : ControllerBase
     /// Sample request:
     /// 
     ///     DELETE /api/client/1
+    ///     Authorization: Bearer my-access-token
     /// 
     /// </remarks>
     /// <returns>NoContent</returns>
